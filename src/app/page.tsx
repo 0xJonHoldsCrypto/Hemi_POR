@@ -34,7 +34,7 @@ export default function Home() {
         {/* Header */}
         <header className="flex flex-col items-center text-center space-y-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-xs uppercase tracking-widest text-primary font-medium">
-            <span className="w-2 h-2 rounded-full bg-primary animate-pulse" /> Live PoR Monitor
+            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" /> Live PoR Monitor
           </div>
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-white mb-2">
             <span className="text-primary">Hemi</span> Proof of Reserve
