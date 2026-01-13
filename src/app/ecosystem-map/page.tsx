@@ -2,17 +2,17 @@ import { EcosystemMap } from "@/components/ecosystem/EcosystemMap";
 
 export default function EcosystemMapPage() {
     return (
-        <div className="min-h-screen bg-black text-white">
-            <div className="container mx-auto px-4 py-8">
-                <h1 className="mb-4 text-center text-3xl font-bold tracking-tight text-white md:text-5xl">
+        <div className="relative h-screen w-screen bg-black text-white overflow-hidden">
+            <div className="absolute top-8 left-8 z-10 pointer-events-none">
+                <h1 className="text-4xl font-bold tracking-tight text-white md:text-6xl mb-2 drop-shadow-md">
                     Ecosystem <span className="text-orange-500">Map</span>
                 </h1>
-                <p className="mb-8 text-center text-zinc-400">
+                <p className="text-lg text-zinc-400 max-w-md drop-shadow-sm">
                     Explore the Hemi Network ecosystem in an interactive view.
                 </p>
-
-                <EcosystemMap />
             </div>
+
+            <EcosystemMap />
         </div>
     );
 }
