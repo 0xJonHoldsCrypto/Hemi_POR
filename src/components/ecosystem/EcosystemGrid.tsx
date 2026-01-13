@@ -107,9 +107,15 @@ export const EcosystemGrid = () => {
         fetchData();
     }, []);
 
+
     const categories = useMemo(() => {
         const allCategories = partners.flatMap((p) => p.categories);
-        return Array.from(new Set(allCategories)).sort();
+        const uniqueCategories = Array.from(new Set(allCategories)).sort();
+
+        return uniqueCategories.map(cat => ({
+            name: cat,
+            count: partners.filter(p => p.categories.includes(cat)).length
+        }));
     }, [partners]);
 
     const filteredPartners = useMemo(() => {
@@ -130,11 +136,22 @@ export const EcosystemGrid = () => {
 
     return (
         <div className="w-full">
+            <div className="flex justify-center mb-12">
+                <span className="inline-flex items-center gap-3 rounded-full border border-orange-500/30 bg-orange-500/15 px-6 py-2.5 text-base font-semibold text-orange-500 backdrop-blur-sm transition-all hover:bg-orange-500/20 hover:scale-105 hover:shadow-lg hover:shadow-orange-500/20 cursor-default">
+                    <span className="relative flex h-3 w-3">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-3 w-3 bg-orange-500"></span>
+                    </span>
+                    {partners.length} Partners and Growing
+                </span>
+            </div>
+
             <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <FilterBar
                     categories={categories}
                     selectedCategory={selectedCategory}
                     onSelectCategory={setSelectedCategory}
+                    totalCount={partners.length}
                 />
 
                 <div className="relative w-full sm:w-72">
