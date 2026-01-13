@@ -1,111 +1,15 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
-import Papa from "papaparse";
-import { Partner } from "@/types/ecosystem";
+import { useState, useMemo } from "react";
 import { PartnerCard } from "./PartnerCard";
 import { FilterBar } from "./FilterBar";
 import { Search } from "lucide-react";
-
-// Updated CSV URL provided by user
-const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSYuVHXQ1IwQYDLF3l9wKsGsDeaeHEyT9civJKBHxtqAwIym7saSNobbCDANaA-lpjF5BZ6LONSAN_-/pub?gid=1320772788&single=true&output=csv";
-
-// Fallback mock data structure updated to match new type
-const MOCK_DATA: Partner[] = [
-    {
-        name: "Hemi Labs",
-        description: "The core contributors to the Hemi Network.",
-        logoUrl: "https://pbs.twimg.com/profile_images/1818282717978050561/0fJqfU6q_400x400.jpg",
-        categories: ["Core", "L2"],
-        status: "Live",
-        xHandle: "@hemi_xyz",
-        websiteUrl: "https://hemi.xyz",
-    },
-    {
-        name: "Bitcoin",
-        description: "The decentralized digital currency.",
-        logoUrl: "https://upload.wikimedia.org/wikipedia/commons/4/46/Bitcoin.svg",
-        categories: ["Infrastructure"],
-        status: "Live",
-        websiteUrl: "https://bitcoin.org",
-    },
-];
+import { useEcosystemData } from "@/hooks/useEcosystemData";
 
 export const EcosystemGrid = () => {
-    const [partners, setPartners] = useState<Partner[]>([]);
-    const [loading, setLoading] = useState(true);
+    const { partners, loading } = useEcosystemData();
     const [selectedCategory, setSelectedCategory] = useState<string>("All");
     const [searchQuery, setSearchQuery] = useState("");
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setLoading(true);
-                const response = await fetch(GOOGLE_SHEET_CSV_URL);
-                if (!response.ok) throw new Error("Failed to fetch CSV");
-                const csvText = await response.text();
-
-                Papa.parse(csvText, {
-                    header: true,
-                    skipEmptyLines: true,
-                    complete: (results) => {
-                        const parsed = results.data.map((row: any) => {
-                            // Determine Categories
-                            let categories: string[] = [];
-
-                            // 1. Try "Category" and "Parent Category" columns
-                            if (row["Category"]) categories.push(row["Category"]);
-                            if (row["Parent Category"]) categories.push(row["Parent Category"]);
-
-                            // 2. Try Checkbox Columns (D-K) based on user description
-                            Object.keys(row).forEach(key => {
-                                const value = row[key]?.toString().trim().toUpperCase();
-                                // Avoid standard columns
-                                if (["PARTNER", "NAME", "DESCRIPTION", "WEBSITE", "URL", "TWITTER", "X", "STATUS", "CATEGORY", "PARENT CATEGORY", "LOGO", "X HANDLE", "ADDITIONAL NOTES"].includes(key.toUpperCase())) return;
-
-                                if (value === "TRUE") {
-                                    categories.push(key);
-                                }
-                            });
-
-                            // Deduplicate categories
-                            categories = Array.from(new Set(categories));
-                            if (categories.length === 0) categories.push("Uncategorized");
-
-                            return {
-                                name: row["Partner"] || row["Name"] || row["name"],
-                                description: row["Description"] || row["description"] || "",
-                                logoUrl: row["LogoURL"] || row["logoUrl"] || "",
-                                categories: categories,
-                                status: row["Status"] || row["status"] || row["Deployment Status"],
-                                // Fixed: Added support for "X Handle" (with space)
-                                xHandle: row["X Handle"] || row["Twitter"] || row["XHandle"] || row["xHandle"],
-                                websiteUrl: row["Website"] || row["WebsiteURL"] || row["websiteUrl"],
-                            };
-                        }).filter((p: any) => p.name);
-
-                        if (parsed.length > 0) {
-                            setPartners(parsed as Partner[]);
-                        } else {
-                            setPartners(MOCK_DATA);
-                        }
-                        setLoading(false);
-                    },
-                    error: (err: any) => {
-                        console.error("CSV Parse Error:", err);
-                        setPartners(MOCK_DATA);
-                        setLoading(false);
-                    }
-                });
-            } catch (error) {
-                console.warn("Using mock data due to fetch error:", error);
-                setPartners(MOCK_DATA);
-                setLoading(false);
-            }
-        };
-
-        fetchData();
-    }, []);
 
 
     const categories = useMemo(() => {
