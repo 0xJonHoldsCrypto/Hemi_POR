@@ -8,7 +8,7 @@ import { FilterBar } from "./FilterBar";
 import { Search } from "lucide-react";
 
 // Updated CSV URL provided by user
-const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSYuVHXQ1IwQYDLF3l9wKsGsDeaeHEyT9civJKBHxtqAwIym7saSNobbCDANaA-lpjF5BZ6LONSAN_-/pub?gid=0&single=true&output=csv";
+const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSYuVHXQ1IwQYDLF3l9wKsGsDeaeHEyT9civJKBHxtqAwIym7saSNobbCDANaA-lpjF5BZ6LONSAN_-/pub?gid=1320772788&single=true&output=csv";
 
 // Fallback mock data structure updated to match new type
 const MOCK_DATA: Partner[] = [
